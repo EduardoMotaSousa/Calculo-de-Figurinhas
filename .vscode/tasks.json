@@ -2,8 +2,8 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Compilar Calculadora",
             "type": "shell",
+            "label": "Compilar projeto",
             "command": "g++",
             "args": [
                 "-Wall",

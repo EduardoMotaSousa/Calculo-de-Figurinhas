@@ -4,7 +4,7 @@
 // Armazena os valores produzidos por um cálculo da CalculadoraAlbum.
 struct Resultado {
     double figurinhasEsperadas = 0.0;
-    double pacotesEsperados    = 0.0;
+    int    pacotesEsperados    = 0;
     double valorEsperado       = 0.0;
 };
 
