@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calculadora de Figurinhas — Eduardo Mota | Estácio 2026</title>
+    <meta name="description"
+          content="Calculadora de probabilidade para completar um álbum de figurinhas, baseada no Problema do Colecionador de Cupons.">
+
+    <!-- Open Graph -->
+    <meta property="og:title"       content="Calculadora de Figurinhas">
+    <meta property="og:description" content="Quanto você vai gastar para completar seu álbum? Descubra com o método exato.">
+    <meta property="og:type"        content="website">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="#inicio" class="logo">
+                <span class="logo-icon">📖</span>
+                <div class="logo-texto">
+                    <h1>Calculadora de Probabilidade</h1>
+                    <span>para Completar um Álbum de Figurinhas</span>
+                </div>
+            </a>
+            <nav>
+                <ul class="navbar">
+                    <li><a href="#inicio"        class="ativo">🏠 Início</a></li>
+                    <li><a href="#como-funciona">❓ Como Funciona</a></li>
+                    <li><a href="#sobre">ℹ️ Sobre o Projeto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ========== MAIN ========== -->
+    <main class="main">
+
+        <!-- ===== SEÇÃO INÍCIO ===== -->
+        <section id="inicio">
+
+            <!-- Coluna esquerda: formulário -->
+            <div class="col-esquerda">
+
+                <!-- Card: Dados de Entrada -->
+                <div class="card">
+                    <div class="card-titulo">
+                        <span class="icone">📋</span>
+                        <h2>Dados de Entrada</h2>
+                    </div>
+                    <p class="card-subtitulo">Preencha as informações do seu álbum e dos pacotes</p>
+
+                    <div class="formulario">
+                        <!-- Figurinhas que já tem -->
+                        <div class="campo">
+                            <label for="inputJaTem">Figurinhas que você já tem</label>
+                            <div class="input-wrapper">
+                                <span class="input-prefixo">🎴</span>
+                                <input
+                                    type="number"
+                                    id="inputJaTem"
+                                    placeholder="Ex: 350"
+                                    min="0"
+                                    max="979"
+                                    aria-label="Figurinhas que você já tem coladas">
+                            </div>
+                            <span class="dica">Figurinhas únicas já coladas no álbum (o álbum tem 980 no total)</span>
+                        </div>
+
+                        <!-- Preço do pacote -->
+                        <div class="campo">
+                            <label for="inputPreco">Preço do pacote (R$)</label>
+                            <div class="input-wrapper">
+                                <span class="input-prefixo">💲</span>
+                                <input
+                                    type="text"
+                                    id="inputPreco"
+                                    placeholder="Ex: 7,00"
+                                    inputmode="decimal"
+                                    aria-label="Preço do pacote em reais">
+                            </div>
+                            <span class="dica">Valor de cada pacote (7 figurinhas por pacote)</span>
+                        </div>
+
+                        <!-- Repetidas (opcional) -->
+                        <div class="campo">
+                            <label for="inputRepetidas">
+                                Figurinhas repetidas que você tem
+                                <span class="label-opcional">opcional</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <span class="input-prefixo">♻️</span>
+                                <input
+                                    type="number"
+                                    id="inputRepetidas"
+                                    placeholder="Ex: 120"
+                                    min="0"
+                                    aria-label="Figurinhas repetidas que você tem">
+                            </div>
+                            <span class="dica">Se informado, são descontadas do total que ainda falta comprar</span>
+                        </div>
+
+                        <button class="btn-calcular" id="btnCalcular" type="button">
+                            📊 Calcular Resultados
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Box Importante -->
+                <div class="box-importante">
+                    <span class="box-icone">ℹ️</span>
+                    <p>
+                        O cálculo considera que todas as figurinhas têm a mesma
+                        probabilidade de aparecer e que não há troca entre colecionadores.
+                        São comprados apenas pacotes novos até completar o álbum.
+                    </p>
+                </div>
+
+                <!-- Card: Exemplo de Cálculo (Copa) -->
+                <div class="card card-exemplo-calculo">
+                    <div class="card-titulo">
+                        <span class="icone">🧪</span>
+                        <h2>Exemplo de Cálculo (Álbum da Copa)</h2>
+                    </div>
+                    <p class="exemplo-dados">Você já tem 350 figurinhas únicas, 120 repetidas, pacote R$ 7,00</p>
+                    <ul class="exemplo-passos">
+                        <li><strong>Faltam</strong> = 980 &minus; 350 = 630 figurinhas únicas</li>
+                        <li><strong>H(630)</strong> = 7,13827&hellip;</li>
+                        <li><strong>Figurinhas esperadas</strong> = 630 &times; 7,138 = 4.497,14</li>
+                        <li><strong>Descontando repetidas</strong> = 4.497,14 &minus; 120 = 4.377,14</li>
+                        <li><strong>Pacotes esperados</strong> = ceil(4.377,14 / 7) = 626</li>
+                        <li><strong>Valor esperado</strong> = 626 &times; R$ 7,00 = R$ 4.382,00</li>
+                    </ul>
+                    <span class="aviso-arredondamento">
+                        ⚠️ Resultados podem variar levemente devido ao arredondamento.
+                    </span>
+                </div>
+
+            </div><!-- /col-esquerda -->
+
+            <!-- Coluna direita: resultados -->
+            <div class="col-direita">
+
+                <!-- Card: Resultados -->
+                <div class="card">
+                    <div class="card-titulo">
+                        <span class="icone">📈</span>
+                        <h2>Resultados do Cálculo (Método Exato)</h2>
+                    </div>
+                    <p class="card-subtitulo">Baseado no Problema do Colecionador de Cupons e na série harmônica</p>
+
+                    <div class="resultados-grid">
+                        <!-- Figurinhas esperadas -->
+                        <div class="card-resultado">
+                            <span class="resultado-icone">🎴</span>
+                            <span class="resultado-label">Figurinhas esperadas</span>
+                            <span class="resultado-valor figurinhas vazio" id="resFigurinhas">—</span>
+                            <span class="resultado-unidade">figurinhas</span>
+                            <p class="resultado-descricao">
+                                Quantidade média de figurinhas que você precisará para completar o álbum.
+                            </p>
+                        </div>
+
+                        <!-- Pacotes esperados -->
+                        <div class="card-resultado">
+                            <span class="resultado-icone">📦</span>
+                            <span class="resultado-label">Pacotes esperados</span>
+                            <span class="resultado-valor pacotes vazio" id="resPacotes">—</span>
+                            <span class="resultado-unidade">pacotes</span>
+                            <p class="resultado-descricao">
+                                Quantidade média de pacotes que você precisará comprar (arredondado para cima).
+                            </p>
+                        </div>
+
+                        <!-- Valor esperado -->
+                        <div class="card-resultado">
+                            <span class="resultado-icone">💰</span>
+                            <span class="resultado-label">Valor esperado</span>
+                            <span class="resultado-valor valor vazio" id="resValor">—</span>
+                            <span class="resultado-unidade">&nbsp;</span>
+                            <p class="resultado-descricao">
+                                Gasto médio esperado para completar o álbum, considerando o preço de cada pacote.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Box Copa do Mundo -->
+                <div class="card-copa">
+                    <div class="copa-header">
+                        <div class="copa-info">
+                            <h3>🏆 Álbum da Copa do Mundo (980 figurinhas)</h3>
+                            <p>Com pacotes de 7 figurinhas custando R$ 7,00 cada.</p>
+                        </div>
+                        <div class="copa-ilustracao" aria-hidden="true">📖⭐🏆</div>
+                    </div>
+                </div>
+
+                <!-- Box Como o cálculo é feito -->
+                <div class="card-formula">
+                    <div class="card-titulo">
+                        <span class="icone">💡</span>
+                        <h2>Como o cálculo é feito?</h2>
+                    </div>
+                    <p class="formula-intro">
+                        Usamos o Problema do Colecionador de Cupons. O número de figurinhas esperadas é dado por:
+                    </p>
+
+                    <div class="formula-grid">
+                        <!-- 1. Número Harmônico -->
+                        <div class="formula-box harmonica">
+                            <h4>1. Número Harmônico (exato)</h4>
+                            <div class="formula-expressao">
+                                H(n) = &sum; 1/<span class="var">i</span><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 1 + 1/2 + 1/3 + &hellip; + 1/n
+                            </div>
+                        </div>
+
+                        <div class="formula-seta">→</div>
+
+                        <!-- 2. Figurinhas esperadas -->
+                        <div class="formula-box figurinhas">
+                            <h4>2. Figurinhas esperadas</h4>
+                            <div class="formula-expressao">
+                                Figurinhas = <span class="var">n</span> &times; H(<span class="var">n</span>)
+                            </div>
+                        </div>
+
+                        <div class="formula-seta baixo">↓</div>
+
+                        <!-- 3. Pacotes esperados -->
+                        <div class="formula-box pacotes">
+                            <h4>3. Pacotes esperados</h4>
+                            <div class="formula-expressao">
+                                Pacotes = ceil( Figurinhas / <span class="var">pacote</span> )<br>
+                                <small>(arredondado para cima)</small>
+                            </div>
+                        </div>
+
+                        <div class="formula-seta">→</div>
+
+                        <!-- 4. Valor esperado -->
+                        <div class="formula-box valor">
+                            <h4>4. Valor esperado</h4>
+                            <div class="formula-expressao">
+                                Valor = Pacotes &times; <span class="var">preço</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /col-direita -->
+
+        </section><!-- /#inicio -->
+
+        <!-- ===== SEÇÃO COMO FUNCIONA ===== -->
+        <section id="como-funciona">
+            <h2>❓ Como Funciona</h2>
+            <p class="secao-subtitulo">
+                Entenda o raciocínio matemático por trás da calculadora.
+            </p>
+
+            <div class="passos-grid">
+                <div class="passo">
+                    <span class="passo-numero">1</span>
+                    <h3>O Problema</h3>
+                    <p>
+                        Cada pacote contém figurinhas aleatórias. Quanto mais perto você estiver de completar,
+                        mais difícil fica encontrar as que faltam. Isso é o Problema do Colecionador de Cupons.
+                    </p>
+                </div>
+                <div class="passo">
+                    <span class="passo-numero">2</span>
+                    <h3>Número Harmônico</h3>
+                    <p>
+                        O valor esperado de compras para obter a <em>k</em>-ésima figurinha nova é
+                        n/(n&minus;k+1). Somando todos os termos, chegamos ao Número Harmônico H(n).
+                    </p>
+                </div>
+                <div class="passo">
+                    <span class="passo-numero">3</span>
+                    <h3>Método Exato</h3>
+                    <p>
+                        Somamos 1 + 1/2 + 1/3 + &hellip; + 1/n para encontrar H(n) com precisão,
+                        sem usar a aproximação ln(n) + 0,5772&hellip;
+                        O resultado é multiplicado por n.
+                    </p>
+                </div>
+                <div class="passo">
+                    <span class="passo-numero">4</span>
+                    <h3>Custo Final</h3>
+                    <p>
+                        Com o total de figurinhas esperadas, calculamos os pacotes necessários
+                        (arredondados para cima, pois não existe meio pacote) e multiplicamos pelo preço.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SEÇÃO SOBRE ===== -->
+        <section id="sobre">
+            <h2>ℹ️ Sobre o Projeto</h2>
+            <p class="secao-subtitulo">
+                Desafio de férias da disciplina de Probabilidade — Estácio, 2026.
+            </p>
+
+            <div class="sobre-grid">
+                <div class="sobre-card">
+                    <h3>🎯 Objetivo</h3>
+                    <p>
+                        Criar uma aplicação web capaz de calcular a quantidade esperada de figurinhas
+                        necessárias para completar um álbum, considerando distribuição uniforme,
+                        sem troca entre colecionadores, comprando apenas pacotes novos.
+                        O algoritmo é baseado no <strong>Problema do Colecionador de Cupons</strong>.
+                    </p>
+                </div>
+                <div class="sobre-card">
+                    <h3>⚙️ Tecnologias</h3>
+                    <div class="tech-lista">
+                        <span class="tech-tag">C++17</span>
+                        <span class="tech-tag">WebAssembly</span>
+                        <span class="tech-tag">Emscripten</span>
+                        <span class="tech-tag">HTML5</span>
+                        <span class="tech-tag">CSS3</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">GitHub Pages</span>
+                    </div>
+                </div>
+                <div class="sobre-card">
+                    <h3>📐 Arquitetura</h3>
+                    <p>
+                        O algoritmo foi implementado em <strong>C++17</strong> e compilado para
+                        <strong>WebAssembly</strong> via Emscripten. A interface HTML/CSS/JS
+                        se comunica com o módulo WASM através do Embind.
+                        Na Sprint 4, o cálculo usa JS puro como ponte temporária.
+                    </p>
+                </div>
+                <div class="sobre-card">
+                    <h3>👤 Autor</h3>
+                    <p>
+                        <strong>Eduardo Mota</strong> — 1º semestre de ADS, Estácio.<br><br>
+                        Projeto desenvolvido com boas práticas de engenharia de software:
+                        classes pequenas, métodos curtos, uma responsabilidade por função,
+                        código legível e documentado.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>
+            🎓 Projeto acadêmico desenvolvido por Eduardo Mota &bull; 2026
+            <span class="sep">|</span>
+            Baseado no Problema do Colecionador de Cupons
+            <span class="sep">|</span>
+            Estácio
+        </p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

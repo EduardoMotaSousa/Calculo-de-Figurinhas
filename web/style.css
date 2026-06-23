@@ -1,0 +1,755 @@
+/* ============================================================
+   Calculadora de Figurinhas — style.css
+   Sprint 4 | Eduardo Mota | Estácio 2026
+   ============================================================ */
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    /* Paleta */
+    --bg-base:        #0d0d1a;
+    --bg-surface:     #131325;
+    --bg-card:        #1a1a2e;
+    --bg-card-hover:  #1e1e35;
+    --border:         #2a2a4a;
+    --border-light:   #3a3a5a;
+
+    /* Roxo principal */
+    --roxo:           #7c3aed;
+    --roxo-hover:     #6d28d9;
+    --roxo-light:     #a78bfa;
+    --roxo-glow:      rgba(124, 58, 237, 0.25);
+
+    /* Cores de destaque dos resultados */
+    --cor-figurinhas: #a78bfa;
+    --cor-pacotes:    #38bdf8;
+    --cor-valor:      #4ade80;
+
+    /* Amarelo Copa */
+    --amarelo:        #fbbf24;
+    --amarelo-light:  #fef3c7;
+
+    /* Textos */
+    --texto-primario:   #f1f0ff;
+    --texto-secundario: #a0a0c0;
+    --texto-muted:      #6060a0;
+
+    /* Tipografia */
+    --font-display: 'Inter', 'Segoe UI', system-ui, sans-serif;
+
+    /* Misc */
+    --radius:    10px;
+    --radius-lg: 16px;
+    --shadow:    0 4px 24px rgba(0, 0, 0, 0.4);
+    --transition: 0.2s ease;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-display);
+    background-color: var(--bg-base);
+    color: var(--texto-primario);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* ---------- Header / Navbar ---------- */
+.header {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 2rem;
+}
+
+.header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+    gap: 1.5rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.logo-icon {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.logo-texto h1 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--texto-primario);
+    line-height: 1.2;
+}
+
+.logo-texto span {
+    font-size: 0.75rem;
+    color: var(--roxo-light);
+    font-weight: 500;
+}
+
+.navbar {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+}
+
+.navbar a {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--texto-secundario);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color var(--transition), background var(--transition);
+}
+
+.navbar a:hover,
+.navbar a.ativo {
+    color: var(--texto-primario);
+    background: var(--roxo-glow);
+}
+
+.navbar a.ativo {
+    color: var(--roxo-light);
+    border-bottom: 2px solid var(--roxo);
+    border-radius: 8px 8px 0 0;
+}
+
+/* ---------- Layout principal ---------- */
+.main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 2rem 3rem;
+}
+
+/* ---------- Seção Início — grid duas colunas ---------- */
+#inicio {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+/* ---------- Cards genéricos ---------- */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+}
+
+.card-titulo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.35rem;
+}
+
+.card-titulo .icone {
+    font-size: 1.1rem;
+}
+
+.card-titulo h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--roxo-light);
+}
+
+.card-subtitulo {
+    font-size: 0.8rem;
+    color: var(--texto-secundario);
+    margin-bottom: 1.25rem;
+    padding-left: 1.75rem;
+}
+
+/* ---------- Coluna esquerda ---------- */
+.col-esquerda {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Formulário */
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.campo label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--texto-primario);
+}
+
+.campo .dica {
+    font-size: 0.75rem;
+    color: var(--texto-muted);
+    margin-top: 0.2rem;
+}
+
+.label-opcional {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--texto-muted);
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.1rem 0.45rem;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+    letter-spacing: 0.02em;
+}
+
+.campo-separador {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0.25rem 0;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    background: var(--bg-base);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color var(--transition);
+}
+
+.input-wrapper:focus-within {
+    border-color: var(--roxo);
+    box-shadow: 0 0 0 3px var(--roxo-glow);
+}
+
+.input-prefixo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: var(--bg-card);
+    border-right: 1px solid var(--border);
+    font-size: 1rem;
+    color: var(--roxo-light);
+    flex-shrink: 0;
+}
+
+.input-wrapper input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0.6rem 0.9rem;
+    font-size: 1rem;
+    color: var(--texto-primario);
+    font-family: var(--font-display);
+}
+
+.input-wrapper input::placeholder {
+    color: var(--texto-muted);
+}
+
+/* Remover setas dos inputs number */
+.input-wrapper input[type="number"]::-webkit-inner-spin-button,
+.input-wrapper input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+/* Botão calcular */
+.btn-calcular {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.85rem 1.5rem;
+    background: var(--roxo);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+    cursor: pointer;
+    transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+    margin-top: 0.5rem;
+}
+
+.btn-calcular:hover {
+    background: var(--roxo-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px var(--roxo-glow);
+}
+
+.btn-calcular:active {
+    transform: translateY(0);
+}
+
+/* Box Importante */
+.box-importante {
+    background: rgba(124, 58, 237, 0.08);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.box-importante .box-icone {
+    font-size: 1rem;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+}
+
+.box-importante p {
+    font-size: 0.82rem;
+    color: var(--texto-secundario);
+    line-height: 1.55;
+}
+
+/* Box Exemplo de Cálculo */
+.card-exemplo-calculo .card-titulo h2 {
+    color: var(--amarelo);
+}
+
+.exemplo-dados {
+    font-size: 0.8rem;
+    color: var(--texto-muted);
+    margin-bottom: 0.9rem;
+}
+
+.exemplo-passos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.exemplo-passos li {
+    font-size: 0.82rem;
+    color: var(--texto-secundario);
+    list-style: none;
+    padding: 0.3rem 0.5rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px;
+}
+
+.exemplo-passos li strong {
+    color: var(--roxo-light);
+    font-weight: 600;
+}
+
+.aviso-arredondamento {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--texto-muted);
+    background: rgba(124, 58, 237, 0.1);
+    border-radius: 4px;
+    padding: 0.25rem 0.6rem;
+}
+
+/* ---------- Coluna direita ---------- */
+.col-direita {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Cards de resultado */
+.resultados-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.9rem;
+    margin-top: 1rem;
+}
+
+.card-resultado {
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.4rem;
+    transition: border-color var(--transition);
+}
+
+.card-resultado:hover {
+    border-color: var(--border-light);
+}
+
+.resultado-icone {
+    font-size: 1.5rem;
+}
+
+.resultado-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--texto-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.resultado-valor {
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1.1;
+    transition: opacity 0.3s ease;
+}
+
+.resultado-valor.figurinhas { color: var(--cor-figurinhas); }
+.resultado-valor.pacotes    { color: var(--cor-pacotes); }
+.resultado-valor.valor      { color: var(--cor-valor); }
+
+.resultado-unidade {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--texto-muted);
+}
+
+.resultado-descricao {
+    font-size: 0.72rem;
+    color: var(--texto-muted);
+    line-height: 1.4;
+    margin-top: 0.15rem;
+}
+
+/* Estado vazio dos resultados */
+.resultado-valor.vazio {
+    color: var(--border-light);
+}
+
+/* Box Copa do Mundo */
+.card-copa {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+}
+
+.copa-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.copa-info h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--amarelo);
+    margin-bottom: 0.2rem;
+}
+
+.copa-info p {
+    font-size: 0.8rem;
+    color: var(--texto-muted);
+}
+
+.copa-ilustracao {
+    font-size: 2.5rem;
+    line-height: 1;
+    letter-spacing: -0.05em;
+}
+
+/* Box Como o cálculo é feito */
+.card-formula {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+}
+
+.formula-intro {
+    font-size: 0.82rem;
+    color: var(--texto-secundario);
+    margin-bottom: 1.25rem;
+}
+
+.formula-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.formula-box {
+    background: var(--bg-base);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+}
+
+.formula-box h4 {
+    font-size: 0.72rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.formula-box.harmonica h4 { color: var(--cor-figurinhas); }
+.formula-box.figurinhas h4 { color: var(--cor-figurinhas); }
+.formula-box.pacotes h4    { color: var(--cor-pacotes); }
+.formula-box.valor h4      { color: var(--cor-valor); }
+
+.formula-expressao {
+    font-size: 0.82rem;
+    color: var(--texto-primario);
+    line-height: 1.6;
+    font-family: 'Courier New', monospace;
+}
+
+.formula-expressao .var {
+    color: var(--roxo-light);
+    font-style: italic;
+}
+
+.formula-seta {
+    font-size: 1.2rem;
+    color: var(--texto-muted);
+    text-align: center;
+}
+
+.formula-seta.baixo {
+    grid-column: 1 / -1;
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* ---------- Seção Como Funciona ---------- */
+#como-funciona {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+}
+
+#como-funciona h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--texto-primario);
+}
+
+#como-funciona .secao-subtitulo {
+    font-size: 0.9rem;
+    color: var(--texto-muted);
+    margin-bottom: 2rem;
+}
+
+.passos-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.passo {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+}
+
+.passo-numero {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--roxo);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.passo h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--texto-primario);
+    margin-bottom: 0.4rem;
+}
+
+.passo p {
+    font-size: 0.8rem;
+    color: var(--texto-secundario);
+    line-height: 1.55;
+}
+
+/* ---------- Seção Sobre ---------- */
+#sobre {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+}
+
+#sobre h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+#sobre .secao-subtitulo {
+    font-size: 0.9rem;
+    color: var(--texto-muted);
+    margin-bottom: 2rem;
+}
+
+.sobre-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.sobre-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+}
+
+.sobre-card h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--roxo-light);
+    margin-bottom: 0.75rem;
+}
+
+.sobre-card p {
+    font-size: 0.85rem;
+    color: var(--texto-secundario);
+    line-height: 1.65;
+}
+
+.tech-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.tech-tag {
+    background: rgba(124, 58, 237, 0.15);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    color: var(--roxo-light);
+    border-radius: 6px;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+    margin-top: 4rem;
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    text-align: center;
+}
+
+.footer p {
+    font-size: 0.8rem;
+    color: var(--texto-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.footer .sep {
+    color: var(--border-light);
+}
+
+/* ---------- Animação de contagem ---------- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.resultado-valor.animando {
+    animation: fadeIn 0.4s ease forwards;
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 900px) {
+    #inicio {
+        grid-template-columns: 1fr;
+    }
+
+    .resultados-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .passos-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .sobre-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .header-inner {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 0.75rem 0;
+    }
+
+    .navbar {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .resultados-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .passos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .formula-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .formula-seta {
+        display: none;
+    }
+}
