@@ -3,7 +3,7 @@
  * Eduardo Mota | Estácio 2026
  *
  * Navegação por View Transition API (com fallback CSS),
- * algoritmo do Colecionador de Cupons e animações de resultado.
+ * algoritmo do Colecionador de Cupons delegado ao WebAssembly.
  */
 
 'use strict';
@@ -76,39 +76,44 @@ function atualizarNavbar(idAtivo) {
 }
 
 /* ════════════════════════════════════════
-   ALGORITMO — Problema do Colecionador de Cupons
+   ALGORITMO — Problema do Colecionador de Cupons via WASM
    ════════════════════════════════════════ */
 
 /**
- * Número Harmônico exato: H(n) = 1 + 1/2 + 1/3 + ... + 1/n
- * @param {number} n
- * @returns {number}
- */
-function calcularNumeroHarmonico(n) {
-    let h = 0.0;
-    for (let i = 1; i <= n; i++) h += 1.0 / i;
-    return h;
-}
-
-/**
  * Ponto de entrada do cálculo.
+ *
+ * Delega o algoritmo ao módulo WebAssembly (CalculadoraAlbum em C++).
+ *
+ * A fórmula correta é:  E = TOTAL × H(faltamEfetivas)
+ * onde H(n) = 1 + 1/2 + ... + 1/n.
+ *
+ * O C++ recebe o total do álbum e quantas faltam SEPARADAMENTE,
+ * pois o universo de probabilidade é sempre 980 — não o número de
+ * faltando. Passar apenas "faltando" como se fosse o universo gerava
+ * resultado errado (ex: falta 1 → retornava 1 figurinha em vez de 980).
+ *
  * @param {number} jatem     - Figurinhas únicas já coladas
- * @param {number} repetidas - Figurinhas repetidas disponíveis
+ * @param {number} repetidas - Figurinhas repetidas disponíveis para troca
  * @param {number} preco     - Preço de cada pacote em R$
  * @returns {{ faltam:number, figurinhas:number, pacotes:number, valor:number }}
  */
 function calcular(jatem, repetidas, preco) {
-    const faltam    = TOTAL_FIGURINHAS - jatem;
-    const efetivas  = Math.max(0, faltam - repetidas);
+    const faltam   = TOTAL_FIGURINHAS - jatem;
+    const efetivas = Math.max(0, faltam - repetidas);
 
     if (efetivas === 0) {
         return { faltam, figurinhas: 0, pacotes: 0, valor: 0 };
     }
 
-    const H          = calcularNumeroHarmonico(efetivas);
-    const figurinhas = efetivas * H;
-    const pacotes    = Math.ceil(figurinhas / FIGURINHAS_PACOTE);
-    const valor      = pacotes * preco;
+    // Construtor C++: CalculadoraAlbum(totalFigurinhas, quantidadeFaltando, figurinhasPorPacote, precoPacote)
+    const calculadora = new moduloWasm.CalculadoraAlbum(TOTAL_FIGURINHAS, efetivas, FIGURINHAS_PACOTE, preco);
+    const resultado   = calculadora.calcular();
+
+    const figurinhas = resultado.figurinhasEsperadas;
+    const pacotes    = resultado.pacotesEsperados;
+    const valor      = resultado.valorEsperado;
+
+    calculadora.delete(); // libera memória do objeto C++
 
     return { faltam, figurinhas, pacotes, valor };
 }
@@ -167,9 +172,21 @@ function lerPreco() {
 }
 
 /* ════════════════════════════════════════
+   WASM — carregamento do módulo
+   ════════════════════════════════════════ */
+let moduloWasm = null;
+
+CriadorCalculadora().then(modulo => {
+    moduloWasm = modulo;
+    btnCalc.click(); // dispara o cálculo inicial com os valores padrão
+});
+
+/* ════════════════════════════════════════
    EVENTO PRINCIPAL — Calcular
    ════════════════════════════════════════ */
 btnCalc.addEventListener('click', () => {
+    if (!moduloWasm) return; // WASM ainda carregando
+
     const jatem     = parseInt(inJaTem.value, 10);
     const repetidas = inRepetidas.value.trim() === '' ? 0 : parseInt(inRepetidas.value, 10);
     const preco     = lerPreco();
@@ -189,4 +206,7 @@ btnCalc.addEventListener('click', () => {
 );
 
 /* Cálculo automático ao carregar com os valores padrão */
-window.addEventListener('DOMContentLoaded', () => btnCalc.click());
+window.addEventListener('DOMContentLoaded', () => {
+    // O cálculo inicial é disparado pelo .then() do CriadorCalculadora acima,
+    // garantindo que o WASM já esteja pronto quando o botão for clicado.
+});

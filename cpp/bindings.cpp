@@ -11,7 +11,9 @@ EMSCRIPTEN_BINDINGS(calculadora) {
         .field("valorEsperado",       &Resultado::valorEsperado);
 
     // Expõe a classe CalculadoraAlbum para o JS
+    // Construtor agora recebe 4 parâmetros:
+    //   totalFigurinhas, quantidadeFaltando, figurinhasPorPacote, precoPacote
     class_<CalculadoraAlbum>("CalculadoraAlbum")
-        .constructor<int, int, double>()
+        .constructor<int, int, int, double>()
         .function("calcular", &CalculadoraAlbum::calcular);
 }

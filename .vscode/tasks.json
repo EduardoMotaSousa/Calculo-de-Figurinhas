@@ -3,7 +3,7 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "Compilar projeto",
+            "label": "Compilar projeto (g++)",
             "command": "g++",
             "args": [
                 "-Wall",
@@ -18,7 +18,26 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "problemMatcher": ["$gcc"]
+            "problemMatcher": ["$gcc"],
+            "detail": "Compila main.cpp + CalculadoraAlbum.cpp para testes locais (sem emscripten)"
+        },
+        {
+            "type": "shell",
+            "label": "Compilar WASM (emcc)",
+            "command": "/home/eduardoms/emsdk/upstream/emscripten/emcc",
+            "args": [
+                "${workspaceFolder}/cpp/CalculadoraAlbum.cpp",
+                "${workspaceFolder}/cpp/bindings.cpp",
+                "-o", "${workspaceFolder}/wasm/calculadora.js",
+                "-lembind",
+                "-s", "MODULARIZE=1",
+                "-s", "EXPORT_NAME=CriadorCalculadora",
+                "-s", "ENVIRONMENT=web",
+                "-O2"
+            ],
+            "group": "build",
+            "problemMatcher": [],
+            "detail": "Gera calculadora.js e calculadora.wasm para o frontend"
         }
     ]
 }
