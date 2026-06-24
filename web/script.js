@@ -1,233 +1,192 @@
 /**
  * script.js — Calculadora de Figurinhas
- * Sprint 4 | Eduardo Mota | Estácio 2026
+ * Eduardo Mota | Estácio 2026
  *
- * Implementa em JavaScript o mesmo algoritmo do CalculadoraAlbum.cpp.
- * Na Sprint 5, esta lógica será substituída pela chamada ao módulo WASM.
+ * Navegação por View Transition API (com fallback CSS),
+ * algoritmo do Colecionador de Cupons e animações de resultado.
  */
 
-// ============================================================
-// Algoritmo — espelho do CalculadoraAlbum.cpp
-// ============================================================
+'use strict';
 
-/**
- * Calcula o Número Harmônico H(n) = 1 + 1/2 + 1/3 + ... + 1/n
- * Método exato (soma da série).
- * @param {number} n - Quantidade total de figurinhas
- * @returns {number}
- */
-function calcularNumeroHarmonico(n) {
-    let numeroHarmonico = 0.0;
-    for (let i = 1; i <= n; i++) {
-        numeroHarmonico += 1.0 / i;
-    }
-    return numeroHarmonico;
-}
-
-/**
- * @param {number} n              - Quantidade total de figurinhas
- * @param {number} numeroHarmonico
- * @returns {number}
- */
-function calcularFigurinhasEsperadas(n, numeroHarmonico) {
-    return n * numeroHarmonico;
-}
-
-/**
- * @param {number} figurinhasEsperadas
- * @param {number} figurinhasPorPacote
- * @returns {number} Inteiro (pacote não existe fracionado)
- */
-function calcularPacotesEsperados(figurinhasEsperadas, figurinhasPorPacote) {
-    return Math.ceil(figurinhasEsperadas / figurinhasPorPacote);
-}
-
-/**
- * @param {number} pacotesEsperados
- * @param {number} precoPacote
- * @returns {number}
- */
-function calcularValorEsperado(pacotesEsperados, precoPacote) {
-    return pacotesEsperados * precoPacote;
-}
-
-// Constantes fixas do álbum da Copa do Mundo
+/* ════════════════════════════════════════
+   CONSTANTES
+   ════════════════════════════════════════ */
 const TOTAL_FIGURINHAS  = 980;
 const FIGURINHAS_PACOTE = 7;
 
+/* ════════════════════════════════════════
+   NAVEGAÇÃO — View Transition API
+   ════════════════════════════════════════ */
+
+/** IDs das seções navegáveis */
+const SECOES = ['inicio', 'como-funciona', 'sobre'];
+
+/** Seção e botão atualmente ativos */
+let secaoAtual = 'inicio';
+
 /**
- * Ponto de entrada — equivalente ao método calcular() do C++.
+ * Troca a seção visível usando View Transition API.
+ * A API captura snapshots dos elementos com view-transition-name
+ * antes e depois da mudança de classe, animando entre eles.
  *
- * Recebe quantas figurinhas únicas o usuário já tem e quantas repetidas
- * (opcional). Calcula o esperado para completar o que ainda falta.
+ * IMPORTANTE: as seções nunca usam display:none — ficam com
+ * opacity:0 + visibility:hidden + position:absolute para que
+ * o browser consiga capturar o snapshot da seção saindo.
  *
- * @param {number} jatem      - Figurinhas únicas já coladas
- * @param {number} repetidas  - Figurinhas repetidas disponíveis (pode ser 0)
- * @param {number} precoPacote
- * @returns {{ faltam: number, figurinhasEsperadas: number, pacotesEsperados: number, valorEsperado: number }}
+ * @param {string} novoId - ID da seção de destino
  */
-function calcular(jatem, repetidas, precoPacote) {
-    const faltam              = TOTAL_FIGURINHAS - jatem;
-    const numeroHarmonico     = calcularNumeroHarmonico(faltam);
-    let figurinhasEsperadas   = calcularFigurinhasEsperadas(faltam, numeroHarmonico);
+function trocarSecao(novoId) {
+    if (novoId === secaoAtual) return;
 
-    // Descontar repetidas: cada repetida é uma figurinha a menos para comprar
-    const repetidasUtil       = Math.min(repetidas, figurinhasEsperadas);
-    figurinhasEsperadas       = Math.max(0, figurinhasEsperadas - repetidasUtil);
+    const elAtual = document.getElementById(secaoAtual);
+    const elProx  = document.getElementById(novoId);
+    if (!elAtual || !elProx) return;
 
-    const pacotesEsperados    = calcularPacotesEsperados(figurinhasEsperadas, FIGURINHAS_PACOTE);
-    const valorEsperado       = calcularValorEsperado(pacotesEsperados, precoPacote);
+    /* Atualiza navbar antes da transição */
+    atualizarNavbar(novoId);
 
-    return { faltam, figurinhasEsperadas, pacotesEsperados, valorEsperado };
+    const aplicarMudanca = () => {
+        elAtual.classList.remove('ativa');
+        elProx.classList.add('ativa');
+        secaoAtual = novoId;
+    };
+
+    if (document.startViewTransition) {
+        /*
+         * startViewTransition():
+         * 1. Captura snapshot do estado atual (secao.ativa = antiga)
+         * 2. Executa o callback (muda as classes)
+         * 3. Captura snapshot do novo estado
+         * 4. Anima entre os dois snapshots via CSS pseudo-elementos
+         *    ::view-transition-old(secao) e ::view-transition-new(secao)
+         */
+        document.startViewTransition(aplicarMudanca);
+    } else {
+        /* Fallback: sem animação de transição, só muda classe */
+        aplicarMudanca();
+    }
 }
 
-// ============================================================
-// Formatação
-// ============================================================
-
-function formatarNumero(n, casas = 2) {
-    return n.toLocaleString('pt-BR', {
-        minimumFractionDigits: casas,
-        maximumFractionDigits: casas,
+/** Marca o botão da navbar correto como ativo */
+function atualizarNavbar(idAtivo) {
+    SECOES.forEach(id => {
+        const btn = document.getElementById('nav-' + id);
+        if (btn) btn.classList.toggle('ativo', id === idAtivo);
     });
 }
 
-function formatarInteiro(n) {
-    return n.toLocaleString('pt-BR');
+/* ════════════════════════════════════════
+   ALGORITMO — Problema do Colecionador de Cupons
+   ════════════════════════════════════════ */
+
+/**
+ * Número Harmônico exato: H(n) = 1 + 1/2 + 1/3 + ... + 1/n
+ * @param {number} n
+ * @returns {number}
+ */
+function calcularNumeroHarmonico(n) {
+    let h = 0.0;
+    for (let i = 1; i <= n; i++) h += 1.0 / i;
+    return h;
 }
 
-function formatarMoeda(n) {
-    return n.toLocaleString('pt-BR', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    });
+/**
+ * Ponto de entrada do cálculo.
+ * @param {number} jatem     - Figurinhas únicas já coladas
+ * @param {number} repetidas - Figurinhas repetidas disponíveis
+ * @param {number} preco     - Preço de cada pacote em R$
+ * @returns {{ faltam:number, figurinhas:number, pacotes:number, valor:number }}
+ */
+function calcular(jatem, repetidas, preco) {
+    const faltam    = TOTAL_FIGURINHAS - jatem;
+    const efetivas  = Math.max(0, faltam - repetidas);
+
+    if (efetivas === 0) {
+        return { faltam, figurinhas: 0, pacotes: 0, valor: 0 };
+    }
+
+    const H          = calcularNumeroHarmonico(efetivas);
+    const figurinhas = efetivas * H;
+    const pacotes    = Math.ceil(figurinhas / FIGURINHAS_PACOTE);
+    const valor      = pacotes * preco;
+
+    return { faltam, figurinhas, pacotes, valor };
 }
 
-// ============================================================
-// DOM
-// ============================================================
+/* ════════════════════════════════════════
+   FORMATAÇÃO
+   ════════════════════════════════════════ */
+const fmt  = (n, c = 2) => n.toLocaleString('pt-BR', { minimumFractionDigits: c, maximumFractionDigits: c });
+const fmtI = n => n.toLocaleString('pt-BR');
+const fmtR = n => 'R$ ' + fmt(n);
 
-const inputJaTem        = document.getElementById('inputJaTem');
-const inputRepetidas    = document.getElementById('inputRepetidas');
-const inputPreco        = document.getElementById('inputPreco');
-const btnCalcular       = document.getElementById('btnCalcular');
-
-const elFigurinhasValor = document.getElementById('resFigurinhas');
-const elPacotesValor    = document.getElementById('resPacotes');
-const elValorValor      = document.getElementById('resValor');
-
-// Valores padrão — exemplo inicial zerado (usuário ainda não começou)
-inputJaTem.value    = 0;
-inputPreco.value    = '7,00';
-
-// ============================================================
-// Validação
-// ============================================================
-
-function lerPreco() {
-    // Aceita vírgula ou ponto como separador decimal
-    const raw = inputPreco.value.replace(',', '.');
-    return parseFloat(raw);
-}
-
+/* ════════════════════════════════════════
+   VALIDAÇÃO
+   ════════════════════════════════════════ */
 function validar(jatem, repetidas, preco) {
-    if (!Number.isInteger(jatem) || jatem < 0) {
+    if (!Number.isInteger(jatem) || jatem < 0)
         return 'Informe quantas figurinhas únicas você já tem (pode ser 0).';
-    }
-    if (jatem >= TOTAL_FIGURINHAS) {
-        return `Você já tem ${TOTAL_FIGURINHAS} ou mais figurinhas — o álbum já está completo!`;
-    }
-    if (!Number.isInteger(repetidas) || repetidas < 0) {
-        return 'A quantidade de repetidas deve ser um número inteiro positivo (ou deixe em branco).';
-    }
-    if (isNaN(preco) || preco <= 0) {
+    if (jatem >= TOTAL_FIGURINHAS)
+        return 'Você já completou o álbum!';
+    if (!Number.isInteger(repetidas) || repetidas < 0)
+        return 'A quantidade de repetidas deve ser um inteiro positivo (ou deixe em branco).';
+    if (isNaN(preco) || preco <= 0)
         return 'O preço do pacote deve ser um valor positivo.';
-    }
     return null;
 }
 
-// ============================================================
-// Animação dos números
-// ============================================================
-
-function animarNumero(elemento, novoTexto) {
-    elemento.classList.remove('animando');
-    // forçar reflow para reiniciar animação
-    void elemento.offsetWidth;
-    elemento.textContent = novoTexto;
-    elemento.classList.add('animando');
-    elemento.classList.remove('vazio');
+/* ════════════════════════════════════════
+   ANIMAÇÃO DOS RESULTADOS
+   ════════════════════════════════════════ */
+function animar(el, texto) {
+    el.classList.remove('animando');
+    void el.offsetWidth; /* força reflow para reiniciar a animação CSS */
+    el.textContent = texto;
+    el.classList.remove('vazio');
+    el.classList.add('animando');
 }
 
-// ============================================================
-// Exibir resultado
-// ============================================================
+/* ════════════════════════════════════════
+   DOM — referências
+   ════════════════════════════════════════ */
+const inJaTem     = document.getElementById('inputJaTem');
+const inRepetidas = document.getElementById('inputRepetidas');
+const inPreco     = document.getElementById('inputPreco');
+const btnCalc     = document.getElementById('btnCalcular');
+const elFig       = document.getElementById('resFigurinhas');
+const elPac       = document.getElementById('resPacotes');
+const elVal       = document.getElementById('resValor');
 
-function exibirResultado(resultado) {
-    animarNumero(elFigurinhasValor, formatarNumero(resultado.figurinhasEsperadas));
-    animarNumero(elPacotesValor,    formatarInteiro(resultado.pacotesEsperados));
-    animarNumero(elValorValor,      'R$ ' + formatarMoeda(resultado.valorEsperado));
+/* Valores padrão */
+inJaTem.value = 0;
+inPreco.value = '7,00';
+
+/* Lê preço aceitando vírgula ou ponto */
+function lerPreco() {
+    return parseFloat(inPreco.value.replace(',', '.'));
 }
 
-function limparResultado() {
-    elFigurinhasValor.textContent = '—';
-    elPacotesValor.textContent    = '—';
-    elValorValor.textContent      = '—';
-    [elFigurinhasValor, elPacotesValor, elValorValor].forEach(el => {
-        el.classList.add('vazio');
-    });
-}
-
-// ============================================================
-// Evento principal
-// ============================================================
-
-btnCalcular.addEventListener('click', () => {
-    const jatem     = parseInt(inputJaTem.value, 10);
-    const repetidas = inputRepetidas.value.trim() === '' ? 0 : parseInt(inputRepetidas.value, 10);
+/* ════════════════════════════════════════
+   EVENTO PRINCIPAL — Calcular
+   ════════════════════════════════════════ */
+btnCalc.addEventListener('click', () => {
+    const jatem     = parseInt(inJaTem.value, 10);
+    const repetidas = inRepetidas.value.trim() === '' ? 0 : parseInt(inRepetidas.value, 10);
     const preco     = lerPreco();
 
     const erro = validar(jatem, repetidas, preco);
-    if (erro) {
-        alert(erro);
-        return;
-    }
+    if (erro) { alert(erro); return; }
 
-    const resultado = calcular(jatem, repetidas, preco);
-    exibirResultado(resultado);
+    const r = calcular(jatem, repetidas, preco);
+    animar(elFig, fmt(r.figurinhas));
+    animar(elPac, fmtI(r.pacotes));
+    animar(elVal, fmtR(r.valor));
 });
 
-// Calcular também com Enter nos inputs
-[inputJaTem, inputRepetidas, inputPreco].forEach(input => {
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') btnCalcular.click();
-    });
-});
+/* Enter em qualquer input dispara o cálculo */
+[inJaTem, inRepetidas, inPreco].forEach(el =>
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') btnCalc.click(); })
+);
 
-// ============================================================
-// Calcular automaticamente ao carregar (valores padrão da Copa)
-// ============================================================
-
-window.addEventListener('DOMContentLoaded', () => {
-    btnCalcular.click();
-});
-
-// ============================================================
-// Navbar — marcar link ativo conforme scroll
-// ============================================================
-
-const secoes   = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('.navbar a');
-
-const observer = new IntersectionObserver((entradas) => {
-    entradas.forEach(entrada => {
-        if (entrada.isIntersecting) {
-            const id = entrada.target.id;
-            navLinks.forEach(link => {
-                link.classList.toggle('ativo', link.getAttribute('href') === `#${id}`);
-            });
-        }
-    });
-}, { threshold: 0.4 });
-
-secoes.forEach(secao => observer.observe(secao));
+/* Cálculo automático ao carregar com os valores padrão */
+window.addEventListener('DOMContentLoaded', () => btnCalc.click());

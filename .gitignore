@@ -1,0 +1,10 @@
+# Binários compilados de C/C++
+output/
+
+# Garantia extra: caso algum .exe seja gerado fora de uma pasta output/
+*.exe
+
+# Outros artefatos comuns de compilacao C/C++, pra evitar o mesmo problema no futuro
+*.o
+*.obj
+*.out
