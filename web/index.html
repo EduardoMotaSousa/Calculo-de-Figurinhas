@@ -155,9 +155,9 @@
                     <li><strong>Faltam únicas</strong> = 980 &minus; 350 = 630</li>
                     <li><strong>Faltam efetivas</strong> = 630 &minus; 120 repetidas = 510</li>
                     <li><strong>H(510)</strong> = 6,87&hellip;</li>
-                    <li><strong>Figurinhas esperadas</strong> = 510 &times; 6,87 = 3.503,74</li>
-                    <li><strong>Pacotes esperados</strong> = ceil(3.503,74 / 7) = 501</li>
-                    <li><strong>Valor esperado</strong> = 501 &times; R$ 7,00 = R$ 3.507,00</li>
+                    <li><strong>Figurinhas esperadas</strong> = 980 &times; 6,87 = 6.732,00</li>
+                    <li><strong>Pacotes esperados</strong> = ceil(6.732,00 / 7) = 962</li>
+                    <li><strong>Valor esperado</strong> = 962 &times; R$ 7,00 = R$ 6.734,00</li>
                 </ul>
                 <span class="aviso-arr">
                     ⚠️ Resultados podem variar levemente devido ao arredondamento.
@@ -213,6 +213,22 @@
 
                 </div>
             </div><!-- /card resultados -->
+
+            <!-- Card: Gráfico de custo acumulado (Sprint 6) -->
+            <div class="card card-grafico">
+                <div class="card-titulo">
+                    <span class="icone" aria-hidden="true">📉</span>
+                    <h2>Curva de Custo Esperado</h2>
+                </div>
+                <p class="card-sub">
+                    Quanto mais figurinhas você cola, mais dinheiro já foi gasto.
+                    O marcador <span class="legenda-marcador" aria-hidden="true">●</span> mostra sua posição atual.
+                </p>
+                <div id="graficoCurva" class="grafico-area" aria-label="Gráfico de custo esperado"
+                     role="img">
+                    <p class="grafico-placeholder">Calculando…</p>
+                </div>
+            </div><!-- /card gráfico -->
 
             <!-- Card: Copa do Mundo -->
             <div class="card-copa">

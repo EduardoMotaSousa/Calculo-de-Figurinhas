@@ -2,6 +2,7 @@
 #define CALCULADORA_ALBUM_H
 
 #include "Resultado.h"
+#include <vector>
 
 // Implementa o Problema do Colecionador de Cupons aplicado a um álbum
 // de figurinhas: calcula quantas figurinhas (e pacotes/reais) são
@@ -30,6 +31,16 @@ public:
     // Executa o cálculo completo e retorna um Resultado.
     Resultado calcular();
 
+    // Gera a curva de custo acumulado esperado (em R$) para todos os pontos
+    // de 0 até totalFigurinhas-1 figurinhas já coladas.
+    //
+    // Retorna um vetor de tamanho totalFigurinhas onde:
+    //   curva[i] = custo esperado em R$ quando já há i figurinhas coladas
+    //
+    // Usa figurinhasPorPacote e precoPacote do próprio objeto.
+    // quantidadeFaltando é ignorado aqui — percorremos todos os estados.
+    std::vector<double> gerarCurva();
+
 private:
     int    totalFigurinhas;
     int    quantidadeFaltando;
@@ -37,6 +48,7 @@ private:
     double precoPacote;
 
     double calcularNumeroHarmonico();
+    double calcularNumeroHarmonicoAte(int n);
     double calcularFigurinhasEsperadas(double numeroHarmonico);
     int    calcularPacotesEsperados(double figurinhasEsperadas);
     double calcularValorEsperado(int pacotesEsperados);
