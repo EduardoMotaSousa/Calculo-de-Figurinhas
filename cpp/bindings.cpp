@@ -19,5 +19,15 @@ EMSCRIPTEN_BINDINGS(calculadora) {
     class_<CalculadoraAlbum>("CalculadoraAlbum")
         .constructor<int, int, int, double>()
         .function("calcular",    &CalculadoraAlbum::calcular)
+        .function("simularMonteCarlo", &CalculadoraAlbum::simularMonteCarlo)
         .function("gerarCurva",  &CalculadoraAlbum::gerarCurva);
+
+    emscripten::value_object<ResultadoMonteCarlo>("ResultadoMonteCarlo")
+    .field("mediana",           &ResultadoMonteCarlo::mediana)
+    .field("p10",               &ResultadoMonteCarlo::p10)
+    .field("p90",               &ResultadoMonteCarlo::p90)
+    .field("media",             &ResultadoMonteCarlo::media)
+    .field("histograma",        &ResultadoMonteCarlo::histograma)
+    .field("histBucketMin",     &ResultadoMonteCarlo::histBucketMin)
+    .field("histBucketTamanho", &ResultadoMonteCarlo::histBucketTamanho);
 }

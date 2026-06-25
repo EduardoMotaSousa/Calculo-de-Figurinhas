@@ -1,5 +1,8 @@
 #include "CalculadoraAlbum.h"
 #include <cmath>
+#include <random>
+#include <algorithm>
+#include <numeric>
 
 CalculadoraAlbum::CalculadoraAlbum(int totalFigurinhas, int quantidadeFaltando, int figurinhasPorPacote, double precoPacote) {
     this->totalFigurinhas     = totalFigurinhas;
@@ -81,4 +84,61 @@ std::vector<double> CalculadoraAlbum::gerarCurva() {
     }
 
     return curva;
+}
+
+ResultadoMonteCarlo CalculadoraAlbum::simularMonteCarlo(int simulacoes) const {
+    const int N_BUCKETS = 40;
+    std::mt19937 rng(42);
+
+    std::vector<double> custos;
+    custos.reserve(simulacoes);
+
+    for (int sim = 0; sim < simulacoes; sim++) {
+        std::vector<bool> album(totalFigurinhas, false);  // ← era quantidadeTotal
+        int coladas = 0;
+        double gasto = 0.0;
+
+        while (coladas < totalFigurinhas) {               // ← era quantidadeTotal
+            gasto += precoPacote;
+            for (int f = 0; f < figurinhasPorPacote; f++) {
+                std::uniform_int_distribution<int> dist(0, totalFigurinhas - 1); // ← era quantidadeTotal - 1
+                int fig = dist(rng);
+                if (!album[fig]) {
+                    album[fig] = true;
+                    coladas++;
+                }
+            }
+        }
+        custos.push_back(gasto);
+    }
+
+    std::sort(custos.begin(), custos.end());
+
+    ResultadoMonteCarlo r;
+    r.media   = std::accumulate(custos.begin(), custos.end(), 0.0) / simulacoes;
+    r.mediana = custos[simulacoes / 2];
+    r.p10     = custos[static_cast<int>(simulacoes * 0.10)];
+    r.p90     = custos[static_cast<int>(simulacoes * 0.90)];
+
+    // Histograma: 40 buckets entre p5 e p95 (corta caudas extremas)
+    double bMin = custos[static_cast<int>(simulacoes * 0.05)];
+    double bMax = custos[static_cast<int>(simulacoes * 0.95)];
+    double bTam = (bMax - bMin) / N_BUCKETS;
+
+    std::vector<int> contagem(N_BUCKETS, 0);
+    for (double c : custos) {
+        int b = static_cast<int>((c - bMin) / bTam);
+        b = std::max(0, std::min(N_BUCKETS - 1, b));
+        contagem[b]++;
+    }
+
+    int pico = *std::max_element(contagem.begin(), contagem.end());
+    r.histograma.resize(N_BUCKETS);
+    for (int b = 0; b < N_BUCKETS; b++) {
+        r.histograma[b] = static_cast<double>(contagem[b]) / pico; // normalizado 0–1
+    }
+
+    r.histBucketMin    = bMin;
+    r.histBucketTamanho = bTam;
+    return r;
 }

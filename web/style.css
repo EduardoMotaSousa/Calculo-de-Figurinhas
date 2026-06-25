@@ -848,3 +848,37 @@ body {
 @media (max-width: 600px) {
     .grafico-area { height: 220px; }
 }
+
+/* Adicionar em :root, junto com as outras variáveis do gráfico */
+:root {
+    --cor-tooltip-bg:     #1e2433;   /* fundo do card — um pouco mais escuro que o card principal */
+    --cor-tooltip-borda:  rgba(255,255,255,0.12);
+    --cor-tooltip-linha:  #a0aec0;
+}
+
+/* Adicionar ao final do arquivo */
+.tt-texto {
+    font-size: 11px;
+    fill: var(--cor-grade);       /* cinza suave — mesma cor da grade */
+    font-family: inherit;
+}
+
+.tt-destaque {
+    font-size: 13px;
+    font-weight: 600;
+    fill: var(--cor-curva);       /* cor da curva — destaca o valor monetário */
+}
+
+:root {
+    --cor-mc-barra:   #7c6af7;
+}
+
+.mc-linha   { stroke: #7c6af7; }
+.mc-p10     { stroke: #4ade80; }   /* verde — cenário otimista  */
+.mc-mediana { stroke: #facc15; }   /* amarelo — mediana         */
+.mc-p90     { stroke: #f87171; }   /* vermelho — cenário pessimista */
+
+.mc-label        { font-size: 10px; fill: #a0aec0; }
+.mc-label.mc-p10    { fill: #4ade80; }
+.mc-label.mc-mediana{ fill: #facc15; }
+.mc-label.mc-p90    { fill: #f87171; }

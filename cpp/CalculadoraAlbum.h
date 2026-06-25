@@ -4,28 +4,23 @@
 #include "Resultado.h"
 #include <vector>
 
-// Implementa o Problema do Colecionador de Cupons aplicado a um álbum
-// de figurinhas: calcula quantas figurinhas (e pacotes/reais) são
-// esperados, em média, até completar o álbum.
-//
-// Fórmula correta:
-//   E = totalFigurinhas × H(quantidadeFaltando)
-//   onde H(n) = 1 + 1/2 + 1/3 + ... + 1/n
-//
-// Por quê isso funciona:
-//   Quando já há (total - n) figurinhas distintas coladas, cada etapa
-//   de coletar a próxima nova tem probabilidades diferentes:
-//     - Coletar a 1ª das n faltando: prob n/total  → esperado total/n
-//     - Coletar a 2ª (faltam n-1):   prob (n-1)/total → esperado total/(n-1)
-//     - ...
-//     - Coletar a última (falta 1):   prob 1/total   → esperado total/1
-//   Somando: total × (1/n + 1/(n-1) + ... + 1/1) = total × H(n)
-//
-// Exemplos:
-//   Falta 1 de 980:   E = 980 × H(1) = 980 × 1       = 980 figurinhas ✓
-//   Faltam 980 de 980: E = 980 × H(980)               = 7315,97 figurinhas ✓
+struct ResultadoMonteCarlo {          // ← sobe para cá
+    double mediana;
+    double p10;
+    double p90;
+    double media;
+    std::vector<double> histograma;
+    double histBucketMin;
+    double histBucketTamanho;
+};
+
 class CalculadoraAlbum {
 public:
+    CalculadoraAlbum(int totalFigurinhas, int quantidadeFaltando,
+                     int figurinhasPorPacote, double precoPacote);
+    Resultado calcular();
+    std::vector<double> gerarCurva();
+    ResultadoMonteCarlo simularMonteCarlo(int simulacoes) const;
     CalculadoraAlbum(int totalFigurinhas, int quantidadeFaltando, int figurinhasPorPacote, double precoPacote);
 
     // Executa o cálculo completo e retorna um Resultado.
@@ -52,6 +47,15 @@ private:
     double calcularFigurinhasEsperadas(double numeroHarmonico);
     int    calcularPacotesEsperados(double figurinhasEsperadas);
     double calcularValorEsperado(int pacotesEsperados);
+};
+struct ResultadoMonteCarlo {
+    double mediana;
+    double p10;      // percentil 10 — lado otimista
+    double p90;      // percentil 90 — lado pessimista
+    double media;    // deve coincidir com o valor esperado analítico
+    std::vector<double> histograma;  // 40 buckets normalizados (frequência relativa)
+    double histBucketMin;
+    double histBucketTamanho;
 };
 
 #endif // CALCULADORA_ALBUM_H
