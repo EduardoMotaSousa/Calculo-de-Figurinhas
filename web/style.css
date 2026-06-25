@@ -31,35 +31,49 @@
 
 /* ── Tokens de design ── */
 :root {
+    /* Cores base */
     --bg:          #0a0f0d;
     --bg-surface:  #0e1510;
     --bg-card:     #131c14;
     --bg-card2:    #162018;
 
+    /* Verde */
     --verde:       #1a9e3f;
     --verde-h:     #15832f;
     --verde-light: #4dbb6e;
     --verde-glow:  rgba(26, 158, 63, 0.28);
     --verde-dim:   rgba(26, 158, 63, 0.12);
 
+    /* Ouro */
     --ouro:        #f5c518;
     --ouro-light:  #fde96b;
     --ouro-dim:    rgba(245, 197, 24, 0.12);
     --ouro-glow:   rgba(245, 197, 24, 0.30);
 
+    /* Acentos */
     --azul:        #38bdf8;
     --lilac:       #c084fc;
 
+    /* Bordas */
     --border:      rgba(255, 255, 255, 0.08);
     --border-m:    rgba(255, 255, 255, 0.14);
 
+    /* Texto */
     --txt1: #f0f5f1;
     --txt2: #9ab09d;
     --txt3: #566358;
 
+    /* Misc */
     --r:    10px;
     --r-lg: 16px;
     --tr:   0.2s ease;
+
+    /* Gráfico */
+    --cor-curva:      #4dbb6e;
+    --cor-grade:      rgba(255, 255, 255, 0.07);
+    --cor-eixo:       rgba(255, 255, 255, 0.2);
+    --cor-marcador:   #f5c542;
+    --cor-fundo-card: #131c14;
 
     font-family: 'Inter', system-ui, sans-serif;
 }
@@ -194,7 +208,6 @@ body {
     margin: 0 auto;
     width: 100%;
     padding: 2rem 2rem 3rem;
-    /* Contexto de empilhamento para as seções absolutas */
     position: relative;
 }
 
@@ -204,17 +217,14 @@ body {
    permitindo que a API capture os snapshots corretamente.
    ════════════════════════════════════ */
 .secao {
-    /* Inativa: sai do fluxo, invisível, não interagível */
     position: absolute;
     inset: 2rem 2rem 3rem;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    /* view-transition-name único por seção (definido inline no HTML) */
 }
 
 .secao.ativa {
-    /* Ativa: volta ao fluxo normal */
     position: relative;
     inset: auto;
     opacity: 1;
@@ -250,7 +260,6 @@ body {
     overflow: hidden;
 }
 
-/* Faixa de grama decorativa no topo */
 .card-grass::before {
     content: '';
     display: block;
@@ -747,7 +756,6 @@ body {
     border-top: 1px solid var(--border);
     padding: 1.2rem 2rem;
     text-align: center;
-    /* Sempre sobre o conteúdo das seções absolutas */
     position: relative;
     z-index: 10;
 }
@@ -784,24 +792,14 @@ body {
     .formula-grid    { grid-template-columns: 1fr; }
     .formula-seta    { display: none; }
 }
+
 /* ════════════════════════════════════
-   GRÁFICO — Sprint 6
+   GRÁFICO — Sprints 6 e 7
    ════════════════════════════════════ */
-
-/* Variáveis específicas do gráfico — definidas na raiz para herdar o tema */
-:root {
-    --cor-curva:     #4dbb6e;       /* verde-light do tema */
-    --cor-grade:     rgba(255,255,255,0.07);
-    --cor-eixo:      rgba(255,255,255,0.2);
-    --cor-marcador:  #f5c542;       /* amarelo dourado — contrasta com o verde */
-    --cor-fundo-card: #131c14;      /* igual a --bg-card */
-}
-
 .card-grafico {
-    grid-column: 1 / -1; /* ocupa a largura toda dentro de col-dir */
+    grid-column: 1 / -1;
 }
 
-/* Área onde o SVG é injetado */
 .grafico-area {
     width: 100%;
     height: 300px;
@@ -809,7 +807,6 @@ body {
     position: relative;
 }
 
-/* Texto exibido enquanto o WASM ainda não calculou */
 .grafico-placeholder {
     position: absolute;
     inset: 0;
@@ -821,7 +818,7 @@ body {
     margin: 0;
 }
 
-/* Labels do SVG (eixos, grade, tooltip do marcador) */
+/* Labels SVG */
 .grafico-label {
     fill: var(--txt3);
     font-size: 11px;
@@ -839,46 +836,25 @@ body {
     font-weight: 600;
 }
 
-/* Bolinha colorida na legenda do card-sub */
+/* Legenda inline */
 .legenda-marcador {
     color: var(--cor-marcador);
     font-size: 0.9em;
 }
 
-@media (max-width: 600px) {
-    .grafico-area { height: 220px; }
-}
-
-/* Adicionar em :root, junto com as outras variáveis do gráfico */
-:root {
-    --cor-tooltip-bg:     #1e2433;   /* fundo do card — um pouco mais escuro que o card principal */
-    --cor-tooltip-borda:  rgba(255,255,255,0.12);
-    --cor-tooltip-linha:  #a0aec0;
-}
-
-/* Adicionar ao final do arquivo */
+/* Tooltip SVG */
 .tt-texto {
     font-size: 11px;
-    fill: var(--cor-grade);       /* cinza suave — mesma cor da grade */
+    fill: var(--cor-grade);
     font-family: inherit;
 }
 
 .tt-destaque {
     font-size: 13px;
     font-weight: 600;
-    fill: var(--cor-curva);       /* cor da curva — destaca o valor monetário */
+    fill: var(--cor-curva);
 }
 
-:root {
-    --cor-mc-barra:   #7c6af7;
+@media (max-width: 600px) {
+    .grafico-area { height: 220px; }
 }
-
-.mc-linha   { stroke: #7c6af7; }
-.mc-p10     { stroke: #4ade80; }   /* verde — cenário otimista  */
-.mc-mediana { stroke: #facc15; }   /* amarelo — mediana         */
-.mc-p90     { stroke: #f87171; }   /* vermelho — cenário pessimista */
-
-.mc-label        { font-size: 10px; fill: #a0aec0; }
-.mc-label.mc-p10    { fill: #4ade80; }
-.mc-label.mc-mediana{ fill: #facc15; }
-.mc-label.mc-p90    { fill: #f87171; }
