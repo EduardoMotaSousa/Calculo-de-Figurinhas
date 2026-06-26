@@ -780,22 +780,130 @@ body {
 .sep { color: var(--border-m); }
 
 /* ════════════════════════════════════
-   RESPONSIVO
+   RESPONSIVO — Tablet (≤ 960px)
    ════════════════════════════════════ */
 @media (max-width: 960px) {
     #inicio          { grid-template-columns: 1fr; }
     .passos-grid     { grid-template-columns: repeat(2, 1fr); }
     .sobre-grid      { grid-template-columns: 1fr; }
     .resultados-grid { grid-template-columns: repeat(3, 1fr); }
+    .main            { padding: 1.5rem 1.25rem 2.5rem; }
 }
 
+/* ════════════════════════════════════
+   RESPONSIVO — Mobile (≤ 600px)
+   ════════════════════════════════════ */
 @media (max-width: 600px) {
-    .header-inner    { flex-wrap: wrap; height: auto; padding: 0.75rem 0; }
-    .navbar          { width: 100%; justify-content: center; }
-    .resultados-grid { grid-template-columns: 1fr; }
-    .passos-grid     { grid-template-columns: 1fr; }
-    .formula-grid    { grid-template-columns: 1fr; }
-    .formula-seta    { display: none; }
+    /* ── Header ── */
+    .header-inner {
+        flex-direction: column;
+        height: auto;
+        padding: 0.65rem 0.9rem 0.5rem;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .logo { justify-content: center; }
+
+    .logo-badge { width: 36px; height: 36px; font-size: 1.15rem; }
+    .logo-texto h1   { font-size: 0.9rem; }
+    .logo-texto span { font-size: 0.62rem; }
+
+    /* Navbar mobile: grid de 3 colunas iguais — sem overflow */
+    nav[aria-label="Navegação principal"] { width: 100%; }
+
+    .navbar {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.3rem;
+        width: 100%;
+        list-style: none;
+    }
+
+    /* li some do fluxo — botão vira filho direto do grid */
+    .navbar li { display: contents; }
+
+    .navbar button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        width: 100%;
+        padding: 0.5rem 0.2rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        line-height: 1.3;
+        border-radius: 8px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .navbar button.ativo {
+        background: var(--ouro-dim);
+        border-color: var(--ouro);
+        color: var(--ouro);
+    }
+
+    /* Oculta o ponto — espaço precioso */
+    .navbar .nav-dot { display: none; }
+
+    /* ── Layout principal ── */
+    .main { padding: 0.9rem 0.85rem 2rem; }
+
+    /* ── Cards ── */
+    .card { padding: 1rem; }
+    .card-grass::before { margin: -1rem -1rem 0.9rem; }
+
+    /* ── Formulário ── */
+    .input-prefix { width: 38px; height: 40px; font-size: 0.9rem; }
+    .input-wrap input { font-size: 0.95rem; padding: 0.5rem 0.75rem; }
+
+    .btn-calcular {
+        padding: 0.9rem 1.25rem;
+        font-size: 0.95rem;
+        border-radius: 10px;
+    }
+
+    /* ── Resultados: 3 colunas compactas ── */
+    .resultados-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem;
+    }
+
+    .card-resultado { padding: 0.65rem 0.4rem; gap: 0.15rem; border-radius: 8px; }
+    .res-icone  { font-size: 1.1rem; }
+    .res-valor  { font-size: 1.3rem; }
+    .res-label  { font-size: 0.57rem; letter-spacing: 0; }
+    .res-unit   { font-size: 0.57rem; }
+    .res-desc   { display: none; }
+
+    /* ── Copa card ── */
+    .card-copa { flex-direction: column; text-align: center; gap: 0.5rem; }
+    .copa-ilust { font-size: 2rem; }
+
+    /* ── Gráfico ── */
+    .grafico-area { height: 190px; }
+
+    /* ── Fórmula ── */
+    .formula-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+    .formula-seta { display: none; }
+
+    /* ── Passos ── */
+    .passos-grid { grid-template-columns: 1fr; gap: 0.6rem; }
+
+    /* ── Seção header ── */
+    .secao-header h2 { font-size: 1.15rem; }
+    .secao-header p  { font-size: 0.8rem; }
+
+    /* ── Sobre ── */
+    .sobre-grid { grid-template-columns: 1fr; gap: 0.85rem; }
+
+    /* ── Footer ── */
+    .footer { padding: 0.85rem; }
+    .footer p { font-size: 0.7rem; gap: 0.3rem; }
 }
 
 /* ════════════════════════════════════
@@ -860,9 +968,12 @@ body {
     fill: var(--cor-curva);
 }
 
-@media (max-width: 600px) {
-    .grafico-area { height: 220px; }
-}
-
 /* Tooltip SVG — visibilidade por classe (Sprint 11: CSP sem unsafe-inline em JS) */
 .svg-tooltip-oculto { display: none; }
+/* SVG do gráfico — estilo movido do setAttribute (Sprint 12: CSP sem unsafe-hashes em JS) */
+#grafico-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    cursor: crosshair;
+}

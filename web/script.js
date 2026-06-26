@@ -1,5 +1,3 @@
-
-
 'use strict';
 
 /* ════════════════════════════════════════
@@ -68,6 +66,32 @@ function atualizarNavbar(idAtivo) {
         if (btn) btn.classList.toggle('ativo', id === idAtivo);
     });
 }
+
+/* ════════════════════════════════════════
+   REGISTRO DE EVENTOS — substituímos onclick="" no HTML por
+   addEventListener aqui, pois a CSP (script-src 'self' sem
+   'unsafe-inline') bloqueia handlers inline em atributos HTML.
+   ════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+    /* Botões de navegação */
+    SECOES.forEach(id => {
+        const btn = document.getElementById('nav-' + id);
+        if (btn) btn.addEventListener('click', () => trocarSecao(id));
+    });
+
+    /* Logo — impede navegação para "#" */
+    const logo = document.querySelector('a.logo');
+    if (logo) logo.addEventListener('click', e => e.preventDefault());
+
+    /* Marca clique real do usuário no botão calcular.
+     * Usa capture:true para rodar ANTES do listener principal,
+     * mas só ativa a flag após o WASM já ter feito seu clique automático.
+     * O clique automático do WASM ocorre no .then() (microtask), antes
+     * de qualquer interação do usuário, então a flag permanece false durante ele. */
+    btnCalc.addEventListener('pointerdown', () => {
+        if (moduloWasm) calculouPeloUsuario = true;
+    });
+});
 
 /* ════════════════════════════════════════
    ALGORITMO — Problema do Colecionador de Cupons via WASM
@@ -209,7 +233,7 @@ function renderizarGrafico(jatem, preco) {
         viewBox: `0 0 ${W} ${H}`,
         xmlns: SVG_NS,
         'aria-label': 'Curva de custo esperado por figurinhas coladas',
-        style: 'width:100%;height:100%;overflow:visible;cursor:crosshair;',
+        /* Nota: style removido — regras movidas para #grafico-svg em style.css (CSP: unsafe-hashes não cobre setAttribute via JS) */
     });
     container.appendChild(svg);
 
@@ -489,6 +513,7 @@ let precoUltimaCurva = null;
    WASM — carregamento do módulo
    ════════════════════════════════════════ */
 let moduloWasm = null;
+let calculouPeloUsuario = false; // flag: só faz scroll se o usuário clicou
 
 CarregarCalculadora().then(modulo => {
     moduloWasm = modulo;
@@ -498,7 +523,7 @@ CarregarCalculadora().then(modulo => {
     gerarCurvaWasm(precoInicial);
     precoUltimaCurva = precoInicial;
 
-    btnCalc.click(); // dispara o cálculo inicial com os valores padrão
+    btnCalc.click(); // dispara o cálculo inicial — SEM scroll (flag ainda false)
 });
 
 /* ════════════════════════════════════════
@@ -518,6 +543,14 @@ btnCalc.addEventListener('click', () => {
     animar(elFig, fmt(r.figurinhas));
     animar(elPac, fmtI(r.pacotes));
     animar(elVal, fmtR(r.valor));
+
+    // Em mobile, desce até os resultados — somente se foi o usuário quem clicou
+    const elResultados = document.getElementById('secao-resultados');
+    if (elResultados && calculouPeloUsuario && window.innerWidth < 960) {
+        setTimeout(() => {
+            elResultados.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 80);
+    }
 
     // Regenera curva somente se o preço mudou (evita 980 cálculos desnecessários)
     if (preco !== precoUltimaCurva) {

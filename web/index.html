@@ -56,7 +56,7 @@
 <header class="header">
     <div class="header-inner">
 
-        <a href="#" class="logo" onclick="return false;" aria-label="Calculadora de Figurinhas">
+        <a href="#" class="logo" aria-label="Calculadora de Figurinhas">
             <div class="logo-badge" aria-hidden="true">📖</div>
             <div class="logo-texto">
                 <h1>Calculadora de Probabilidade</h1>
@@ -68,22 +68,19 @@
             <ul class="navbar">
                 <li>
                     <button id="nav-inicio" class="ativo"
-                            onclick="trocarSecao('inicio')"
                             aria-current="page">
                         <span class="nav-dot" aria-hidden="true"></span>
                         🏠 Início
                     </button>
                 </li>
                 <li>
-                    <button id="nav-como-funciona"
-                            onclick="trocarSecao('como-funciona')">
+                    <button id="nav-como-funciona">
                         <span class="nav-dot" aria-hidden="true"></span>
                         ❓ Como Funciona
                     </button>
                 </li>
                 <li>
-                    <button id="nav-sobre"
-                            onclick="trocarSecao('sobre')">
+                    <button id="nav-sobre">
                         <span class="nav-dot" aria-hidden="true"></span>
                         ℹ️ Sobre o Projeto
                     </button>
@@ -206,7 +203,7 @@
         <div class="col-dir">
 
             <!-- Card: Resultados -->
-            <div class="card card-grass">
+            <div class="card card-grass" id="secao-resultados">
                 <div class="card-titulo">
                     <span class="icone" aria-hidden="true">📈</span>
                     <h2>Resultados do Cálculo (Método Exato)</h2>
