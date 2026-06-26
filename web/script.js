@@ -528,7 +528,7 @@ let precoUltimaCurva = null;
    ════════════════════════════════════════ */
 let moduloWasm = null;
 
-CriadorCalculadora().then(modulo => {
+CarregarCalculadora().then(modulo => {
     moduloWasm = modulo;
 
     // Gera a curva inicial com o preço padrão
@@ -580,6 +580,6 @@ window.addEventListener('resize', () => {
 
 /* Cálculo automático ao carregar com os valores padrão */
 window.addEventListener('DOMContentLoaded', () => {
-    // O cálculo inicial é disparado pelo .then() do CriadorCalculadora acima,
+    // O cálculo inicial é disparado pelo .then() do CarregarCalculadora acima,
     // garantindo que o WASM já esteja pronto quando o botão for clicado.
 });
