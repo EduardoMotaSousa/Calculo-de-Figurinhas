@@ -1,11 +1,4 @@
-/**
- * script.js — Calculadora de Figurinhas
- * Eduardo Mota | Estácio 2026
- *
- * Navegação por View Transition API (com fallback CSS),
- * algoritmo do Colecionador de Cupons delegado ao WebAssembly.
- * Sprint 6: gráfico de custo acumulado renderizado em SVG puro.
- */
+
 
 'use strict';
 
