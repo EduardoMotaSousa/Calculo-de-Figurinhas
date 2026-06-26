@@ -863,3 +863,6 @@ body {
 @media (max-width: 600px) {
     .grafico-area { height: 220px; }
 }
+
+/* Tooltip SVG — visibilidade por classe (Sprint 11: CSP sem unsafe-inline em JS) */
+.svg-tooltip-oculto { display: none; }

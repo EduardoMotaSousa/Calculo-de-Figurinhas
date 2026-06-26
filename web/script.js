@@ -328,8 +328,7 @@ function renderizarGrafico(jatem, preco) {
     svg.appendChild(tooltipEstatico);
 
     /* Grupo tooltip hover */
-    const ttGroup = svgEl('g', { id: 'svg-tooltip', 'pointer-events': 'none' });
-    ttGroup.style.display = 'none';
+    const ttGroup = svgEl('g', { id: 'svg-tooltip', class: 'svg-tooltip-oculto', 'pointer-events': 'none' });
 
     const ttLinha = svgEl('line', {
         id: 'tt-linha',
@@ -378,7 +377,7 @@ function renderizarGrafico(jatem, preco) {
     function mostrarTooltip(clientX, clientY) {
         const { x: svgX } = clientParaSVG(clientX, clientY);
         if (svgX < PAD.left || svgX > PAD.left + plotW) {
-            ttGroup.style.display = 'none';
+            ttGroup.classList.add('svg-tooltip-oculto');
             return;
         }
 
@@ -417,17 +416,17 @@ function renderizarGrafico(jatem, preco) {
         ttTexto2.setAttribute('x', (cardX + 10).toFixed(1));
         ttTexto2.setAttribute('y', (cardY + 32).toFixed(1));
 
-        ttGroup.style.display = '';
+        ttGroup.classList.remove('svg-tooltip-oculto');
     }
 
     overlay.addEventListener('mousemove', e => mostrarTooltip(e.clientX, e.clientY));
-    overlay.addEventListener('mouseleave', () => { ttGroup.style.display = 'none'; });
+    overlay.addEventListener('mouseleave', () => { ttGroup.classList.add('svg-tooltip-oculto'); });
     overlay.addEventListener('touchmove', e => {
         e.preventDefault();
         const t = e.touches[0];
         mostrarTooltip(t.clientX, t.clientY);
     }, { passive: false });
-    overlay.addEventListener('touchend', () => { ttGroup.style.display = 'none'; });
+    overlay.addEventListener('touchend', () => { ttGroup.classList.add('svg-tooltip-oculto'); });
 }
 
 /* ════════════════════════════════════════
