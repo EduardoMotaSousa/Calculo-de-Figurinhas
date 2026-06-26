@@ -13,7 +13,6 @@ const ASSETS_PRECACHE = [
     './index.html',
     './style.css',
     './script.js',
-    './manifest.json',
     './wasm/calculadora.js',
     './wasm/calculadora.wasm',
     './logo_figurinhas.svg',
@@ -25,9 +24,15 @@ const ASSETS_PRECACHE = [
 /* ── Instalação: pré-cacheia todos os assets ── */
 self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(ASSETS_PRECACHE))
-            .then(() => self.skipWaiting())   // ativa imediatamente, sem esperar aba fechar
+        caches.open(CACHE_NAME).then(cache =>
+            Promise.allSettled(
+                ASSETS_PRECACHE.map(url =>
+                    cache.add(url).catch(err =>
+                        console.warn('SW: falha ao cachear', url, err)
+                    )
+                )
+            )
+        ).then(() => self.skipWaiting())
     );
 });
 
