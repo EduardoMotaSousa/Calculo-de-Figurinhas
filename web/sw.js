@@ -5,7 +5,7 @@
      • WASM / JS / CSS / imagens → Cache First (assets estáticos)
    ════════════════════════════════════════ */
 
-const CACHE_NAME = 'figurinhas-v1';
+const CACHE_NAME = 'figurinhas-v2';
 
 /* Assets que entram no cache na instalação */
 const ASSETS_PRECACHE = [
@@ -16,9 +16,11 @@ const ASSETS_PRECACHE = [
     './wasm/calculadora.js',
     './wasm/calculadora.wasm',
     './logo_figurinhas.svg',
-    './logo_96h.png',
-    './logo_192h.png',
+    './icon_96x96.png',
+    './icon_192x192.png',
     './banner.jpg',
+    './manifest.json',
+    './registrar-sw.js',
 ];
 
 /* ── Instalação: pré-cacheia todos os assets ── */
@@ -27,7 +29,11 @@ self.addEventListener('install', event => {
         caches.open(CACHE_NAME).then(cache =>
             Promise.allSettled(
                 ASSETS_PRECACHE.map(url =>
-                    cache.add(url).catch(err =>
+                    fetch(url).then(res => {
+                        /* Só cacheia respostas válidas — evita cache poisoning com 4xx/5xx */
+                        if (res.ok) return cache.put(url, res);
+                        console.warn('SW: resposta não-ok para', url, res.status);
+                    }).catch(err =>
                         console.warn('SW: falha ao cachear', url, err)
                     )
                 )
@@ -45,7 +51,7 @@ self.addEventListener('activate', event => {
                     .filter(key => key !== CACHE_NAME)
                     .map(key => caches.delete(key))
             )
-        ).then(() => self.clients.claim())    // assume controle das abas abertas
+        ).then(() => self.clients.claim())
     );
 });
 
@@ -53,16 +59,14 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
     const url = new URL(event.request.url);
 
-    // Ignora requisições externas (ex: analytics, CDNs de terceiros)
+    /* Ignora requisições externas (CDNs, analytics etc.) */
     if (url.origin !== location.origin) return;
 
     const isHTML = event.request.headers.get('accept')?.includes('text/html');
 
     if (isHTML) {
-        // Network First para HTML: tenta rede, cai para cache se offline
         event.respondWith(networkFirst(event.request));
     } else {
-        // Cache First para assets: serve do cache, atualiza em background
         event.respondWith(cacheFirst(event.request));
     }
 });
@@ -71,8 +75,10 @@ self.addEventListener('fetch', event => {
 async function networkFirst(request) {
     try {
         const response = await fetch(request);
-        const cache    = await caches.open(CACHE_NAME);
-        cache.put(request, response.clone());
+        if (response.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(request, response.clone());
+        }
         return response;
     } catch {
         const cached = await caches.match(request);
@@ -88,11 +94,12 @@ async function cacheFirst(request) {
     const cached = await caches.match(request);
     if (cached) return cached;
 
-    // Não estava no cache (ex: asset novo): busca na rede e guarda
     try {
         const response = await fetch(request);
-        const cache    = await caches.open(CACHE_NAME);
-        cache.put(request, response.clone());
+        if (response.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(request, response.clone());
+        }
         return response;
     } catch {
         return new Response('Recurso indisponível offline.', { status: 503 });

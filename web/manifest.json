@@ -2,18 +2,19 @@
   "name": "Calculadora de Figurinhas",
   "short_name": "Figurinhas",
   "description": "Calcule quantas figurinhas faltam para completar seu álbum da Copa 2026",
-  "start_url": "/",
+  "start_url": "/Calculo-de-Figurinhas/",
+  "scope": "/Calculo-de-Figurinhas/",
   "display": "standalone",
   "background_color": "#080e1a",
   "theme_color": "#1a9e3f",
   "icons": [
     {
-      "src": "logo_96h.png",
+      "src": "icon_96x96.png",
       "sizes": "96x96",
       "type": "image/png"
     },
     {
-      "src": "logo_192h.png",
+      "src": "icon_192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },

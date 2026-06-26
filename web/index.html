@@ -3,6 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--
+        Content Security Policy (Sprint 11)
+        - default-src 'self'         → bloqueia tudo externo por padrão
+        - script-src 'self'          → só scripts do próprio domínio
+        - style-src 'self'           → só CSS do próprio domínio
+        - img-src 'self' data:       → imagens locais + data URIs (SVG inline)
+        - connect-src 'self'         → fetch/XHR só para o próprio domínio
+        - manifest-src 'self'        → manifest.json do próprio domínio
+        - wasm-unsafe-eval           → necessário para o módulo WASM gerado pelo Emscripten
+          (menos permissivo que unsafe-eval — autoriza apenas WebAssembly, não JS eval)
+    -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' https://fonts.googleapis.com 'unsafe-hashes' 'sha256-KyUjhyzlWNfRQQD/QHccZa8nVruvSQfdtqTLIXTI6yU=' 'sha256-d3KDjAJmJr6O7WPMRmvfilsYZg5AyFBmSePI16O693E=' 'sha256-YZBYj4qyE6D5XshJGL/cp/WiIR9QF01C87/rustAnWI='; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; manifest-src 'self'">
     <title>Calculadora de Figurinhas — Eduardo Mota | Estácio 2026</title>
     <meta name="description"
           content="Calculadora de probabilidade para completar um álbum de figurinhas, baseada no Problema do Colecionador de Cupons.">
@@ -92,7 +106,7 @@
         com opacity:0 + visibility:hidden via CSS (.secao sem .ativa),
         para que o browser possa capturar os snapshots da transição.
     -->
-    <section id="inicio" class="secao ativa" style="view-transition-name: secao-inicio;">
+    <section id="inicio" class="secao ativa">
 
         <!-- Coluna esquerda: formulário -->
         <div class="col-esq">
@@ -318,7 +332,7 @@
     </section><!-- /#inicio -->
 
     <!-- ══════════ SEÇÃO COMO FUNCIONA ══════════ -->
-    <section id="como-funciona" class="secao" style="view-transition-name: secao-como-funciona;">
+    <section id="como-funciona" class="secao">
 
         <div class="secao-header">
             <h2>❓ Como Funciona</h2>
@@ -363,7 +377,7 @@
     </section>
 
     <!-- ══════════ SEÇÃO SOBRE ══════════ -->
-    <section id="sobre" class="secao" style="view-transition-name: secao-sobre;">
+    <section id="sobre" class="secao">
 
         <div class="secao-header">
             <h2>ℹ️ Sobre o Projeto</h2>
@@ -441,14 +455,7 @@
 <script src="script.js"></script>
 
 <!-- ── Service Worker (PWA offline) ── -->
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .catch(err => console.warn('SW não registrado:', err));
-        });
-    }
-</script>
+<script src="registrar-sw.js"></script>
 
 </body>
 </html>

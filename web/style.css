@@ -232,6 +232,11 @@ body {
     pointer-events: auto;
 }
 
+/* View Transition Names — movidos do HTML para cá (Sprint 11: CSP sem unsafe-inline) */
+#inicio        { view-transition-name: secao-inicio; }
+#como-funciona { view-transition-name: secao-como-funciona; }
+#sobre         { view-transition-name: secao-sobre; }
+
 /* ════════════════════════════════════
    SEÇÃO INÍCIO — grid 2 colunas
    ════════════════════════════════════ */
