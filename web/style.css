@@ -85,7 +85,6 @@ html {
 }
 
 body {
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     background:
@@ -203,7 +202,6 @@ body {
    LAYOUT PRINCIPAL
    ════════════════════════════════════ */
 .main {
-    flex: 1;
     max-width: 1280px;
     margin: 0 auto;
     width: 100%;
@@ -212,40 +210,31 @@ body {
 }
 
 /* ════════════════════════════════════
-   SEÇÕES — view-transition sem display:none
-   As seções inativas ficam fora do fluxo mas ainda no DOM,
-   permitindo que a API capture os snapshots corretamente.
+   SEÇÕES — display:none nas inativas elimina espaço em branco.
+   A View Transition API captura o snapshot antes do callback,
+   então display:none não interfere na animação.
    ════════════════════════════════════ */
 .secao {
-    position: absolute;
-    inset: 2rem 2rem 3rem;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+    display: none;
 }
 
-.secao.ativa {
-    position: relative;
-    inset: auto;
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-}
-
-/* View Transition Names — movidos do HTML para cá (Sprint 11: CSP sem unsafe-inline) */
-#inicio        { view-transition-name: secao-inicio; }
-#como-funciona { view-transition-name: secao-como-funciona; }
-#sobre         { view-transition-name: secao-sobre; }
-
-/* ════════════════════════════════════
-   SEÇÃO INÍCIO — grid 2 colunas
-   ════════════════════════════════════ */
-#inicio {
+/* Início precisa de grid — declarado junto com .ativa para não conflitar */
+#inicio.ativa {
     display: grid;
     grid-template-columns: 420px 1fr;
     gap: 1.5rem;
     align-items: start;
 }
+
+#como-funciona.ativa,
+#sobre.ativa {
+    display: block;
+}
+
+/* View Transition Names */
+#inicio        { view-transition-name: secao-inicio; }
+#como-funciona { view-transition-name: secao-como-funciona; }
+#sobre         { view-transition-name: secao-sobre; }
 
 .col-esq,
 .col-dir {
@@ -754,6 +743,47 @@ body {
 }
 
 /* ════════════════════════════════════
+   BOTÃO GITHUB
+   ════════════════════════════════════ */
+.sobre-card-github {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    grid-column: 1 / -1;
+}
+
+.btn-github {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 0.25rem;
+    padding: 0.6rem 1.1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    color: var(--txt1);
+    font-size: 0.82rem;
+    font-weight: 700;
+    font-family: inherit;
+    text-decoration: none;
+    transition: background var(--tr), border-color var(--tr), transform var(--tr);
+    align-self: flex-start;
+}
+
+.btn-github:hover {
+    background: rgba(255, 255, 255, 0.11);
+    border-color: rgba(255, 255, 255, 0.35);
+    transform: translateY(-2px);
+}
+
+.btn-github svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--txt1);
+    flex-shrink: 0;
+}
+
+/* ════════════════════════════════════
    FOOTER
    ════════════════════════════════════ */
 .footer {
@@ -783,7 +813,7 @@ body {
    RESPONSIVO — Tablet (≤ 960px)
    ════════════════════════════════════ */
 @media (max-width: 960px) {
-    #inicio          { grid-template-columns: 1fr; }
+    #inicio.ativa        { grid-template-columns: 1fr; }
     .passos-grid     { grid-template-columns: repeat(2, 1fr); }
     .sobre-grid      { grid-template-columns: 1fr; }
     .resultados-grid { grid-template-columns: repeat(3, 1fr); }

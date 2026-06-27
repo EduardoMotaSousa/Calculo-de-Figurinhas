@@ -41,6 +41,7 @@ function trocarSecao(novoId) {
         elAtual.classList.remove('ativa');
         elProx.classList.add('ativa');
         secaoAtual = novoId;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     if (document.startViewTransition) {
