@@ -8,7 +8,7 @@
         Content Security Policy (Sprint 11)
         - default-src 'self'         → bloqueia tudo externo por padrão
         - script-src 'self'          → só scripts do próprio domínio
-        - style-src 'self'           → só CSS do próprio domínio
+        - style-src 'self'           → só CSS do próprio domínio (sem fontes externas — system-ui stack)
         - img-src 'self' data:       → imagens locais + data URIs (SVG inline)
         - connect-src 'self'         → fetch/XHR só para o próprio domínio
         - manifest-src 'self'        → manifest.json do próprio domínio
@@ -16,7 +16,7 @@
           (menos permissivo que unsafe-eval — autoriza apenas WebAssembly, não JS eval)
     -->
     <meta http-equiv="Content-Security-Policy"
-          content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-hashes' 'sha256-KyUjhyzlWNfRQQD/QHccZa8nVruvSQfdtqTLIXTI6yU=' 'sha256-d3KDjAJmJr6O7WPMRmvfilsYZg5AyFBmSePI16O693E=' 'sha256-YZBYj4qyE6D5XshJGL/cp/WiIR9QF01C87/rustAnWI='; style-src-elem 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; manifest-src 'self'">
+          content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-hashes' 'sha256-KyUjhyzlWNfRQQD/QHccZa8nVruvSQfdtqTLIXTI6yU=' 'sha256-d3KDjAJmJr6O7WPMRmvfilsYZg5AyFBmSePI16O693E=' 'sha256-YZBYj4qyE6D5XshJGL/cp/WiIR9QF01C87/rustAnWI='; font-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'">
     <title>Calculadora de Figurinhas — Eduardo Mota | Estácio 2026</title>
     <meta name="description"
           content="Calculadora de probabilidade para completar um álbum de figurinhas, baseada no Problema do Colecionador de Cupons.">
@@ -46,11 +46,12 @@
     <meta name="twitter:description" content="Descubra quantas figurinhas e pacotes você ainda precisa para completar seu álbum.">
     <meta name="twitter:image"       content="https://EduardoMotaSousa.github.io/Calculo-de-Figurinhas/banner.jpg">
 
-    <!-- ── Google Fonts: carregado via <link> (CSP: style-src-elem permite fonts.googleapis.com) ── -->
-    <!-- O @import dentro do CSS foi removido — @import não é coberto por style-src-elem -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+    <!--
+        Fonte: system-ui stack (sem dependência externa).
+        Inter é usada se instalada localmente; fallback idêntico no macOS/iOS
+        (system-ui = SF Pro), Windows 11 (Segoe UI Variable) e Android (Roboto).
+        Elimina qualquer requisição externa de fonte e simplifica a CSP.
+    -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>

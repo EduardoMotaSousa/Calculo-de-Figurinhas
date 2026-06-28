@@ -3,7 +3,7 @@
    Eduardo Mota | Estácio 2026
    ============================================================ */
 
-/* Fonte: Inter carregada via <link> no HTML (não via @import — CSP bloqueia @import de stylesheet externa) */
+/* Fonte: system-ui stack — sem dependência externa. Inter aparece se instalada localmente. */
 
 /* ── View Transition: pseudo-elementos do snapshot ── */
 ::view-transition-old(secao) {
@@ -75,7 +75,7 @@
     --cor-marcador:   #f5c542;
     --cor-fundo-card: #131c14;
 
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI Variable', 'Segoe UI', Roboto, sans-serif;
 }
 
 html {

@@ -5,7 +5,7 @@
      • WASM / JS / CSS / imagens → Cache First (assets estáticos)
    ════════════════════════════════════════ */
 
-const CACHE_NAME = 'figurinhas-v3';
+const CACHE_NAME = 'figurinhas-v5';
 
 /* Assets que entram no cache na instalação */
 const ASSETS_PRECACHE = [
