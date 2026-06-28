@@ -292,7 +292,7 @@
                 <div class="formula-grid">
 
                     <div class="formula-box harmonica">
-                        <h4>1. Número Harmônico (exato)</h4>
+                        <h3>1. Número Harmônico (exato)</h3>
                         <div class="formula-expr">
                             H(n) = &sum; 1/<span class="var">i</span><br>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 1 + 1/2 + 1/3 + &hellip; + 1/n
@@ -302,7 +302,7 @@
                     <div class="formula-seta" aria-hidden="true">→</div>
 
                     <div class="formula-box figurinhas">
-                        <h4>2. Figurinhas esperadas</h4>
+                        <h3>2. Figurinhas esperadas</h3>
                         <div class="formula-expr">
                             Figurinhas = <span class="var">n</span> &times; H(<span class="var">n</span>)
                         </div>
@@ -311,7 +311,7 @@
                     <div class="formula-seta baixo" aria-hidden="true">↓</div>
 
                     <div class="formula-box pacotes">
-                        <h4>3. Pacotes esperados</h4>
+                        <h3>3. Pacotes esperados</h3>
                         <div class="formula-expr">
                             Pacotes = ceil( Figurinhas / <span class="var">pacote</span> )<br>
                             <small>(arredondado para cima)</small>
@@ -321,7 +321,7 @@
                     <div class="formula-seta" aria-hidden="true">→</div>
 
                     <div class="formula-box valor">
-                        <h4>4. Valor esperado</h4>
+                        <h3>4. Valor esperado</h3>
                         <div class="formula-expr">
                             Valor = Pacotes &times; <span class="var">preço</span>
                         </div>
@@ -479,13 +479,6 @@
 <!--
     O módulo WASM (Sprint 5) deve ser carregado antes do script.js.
     O Emscripten gera calculadora.js com a função global CriadorCalculadora().
--->
-<!--
-    defer nos três scripts:
-      - Remove o bloqueio de parser (render-blocking) — FCP/LCP melhoram
-      - A ordem de execução é preservada pelo browser (calculadora.js → script.js → registrar-sw.js)
-      - Seguro porque script.js só usa CarregarCalculadora() dentro de DOMContentLoaded,
-        que dispara depois que todos os scripts defer já executaram
 -->
 <script src="wasm/calculadora.js" defer></script>
 <script src="script.js"           defer></script>

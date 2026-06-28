@@ -61,7 +61,7 @@
     /* Texto */
     --txt1: #f0f5f1;
     --txt2: #9ab09d;
-    --txt3: #566358;
+    --txt3: #7a9a7d; /* era #566358 — aumentado para ≥ 4.5:1 sobre fundos escuros (WCAG AA) */
 
     /* Misc */
     --r:    10px;
@@ -593,7 +593,7 @@ body {
     text-align: center;
 }
 
-.formula-box h4 {
+.formula-box h3 {
     font-size: 0.67rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -601,10 +601,10 @@ body {
     margin-bottom: 0.45rem;
 }
 
-.formula-box.harmonica h4,
-.formula-box.figurinhas h4 { color: var(--lilac); }
-.formula-box.pacotes h4    { color: var(--azul); }
-.formula-box.valor h4      { color: var(--verde-light); }
+.formula-box.harmonica h3,
+.formula-box.figurinhas h3 { color: var(--lilac); }
+.formula-box.pacotes h3    { color: var(--azul); }
+.formula-box.valor h3      { color: var(--verde-light); }
 
 .formula-expr {
     font-size: 0.8rem;
@@ -988,7 +988,7 @@ body {
 /* Tooltip SVG */
 .tt-texto {
     font-size: 11px;
-    fill: var(--cor-grade);
+    fill: var(--txt1);   /* era var(--cor-grade) = rgba(255,255,255,0.07) — ilegível */
     font-family: inherit;
 }
 
