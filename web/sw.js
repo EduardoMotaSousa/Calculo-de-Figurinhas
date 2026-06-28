@@ -5,9 +5,14 @@
      • WASM / JS / CSS / imagens → Cache First (assets estáticos)
    ════════════════════════════════════════ */
 
-const CACHE_NAME = 'figurinhas-v5';
+const CACHE_NAME = 'figurinhas-v6';
 
-/* Assets que entram no cache na instalação */
+/* Assets que entram no cache na instalação.
+   Excluídos intencionalmente do precache:
+     - icon_512x512.png (21 KB) — só lido pelo OS ao instalar o PWA, não em navegação
+     - banner.jpg      (56 KB) — OG image, nunca carregado pela interface normal
+   Ambos ainda são cacheados on-demand pela estratégia Cache First se o OS/browser
+   os requisitar depois da instalação. */
 const ASSETS_PRECACHE = [
     './',
     './index.html',
@@ -18,7 +23,6 @@ const ASSETS_PRECACHE = [
     './logo_figurinhas.svg',
     './icon_96x96.png',
     './icon_192x192.png',
-    './banner.jpg',
     './manifest.json',
     './registrar-sw.js',
 ];

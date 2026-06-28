@@ -480,11 +480,18 @@
     O módulo WASM (Sprint 5) deve ser carregado antes do script.js.
     O Emscripten gera calculadora.js com a função global CriadorCalculadora().
 -->
-<script src="wasm/calculadora.js"></script>
-<script src="script.js"></script>
+<!--
+    defer nos três scripts:
+      - Remove o bloqueio de parser (render-blocking) — FCP/LCP melhoram
+      - A ordem de execução é preservada pelo browser (calculadora.js → script.js → registrar-sw.js)
+      - Seguro porque script.js só usa CarregarCalculadora() dentro de DOMContentLoaded,
+        que dispara depois que todos os scripts defer já executaram
+-->
+<script src="wasm/calculadora.js" defer></script>
+<script src="script.js"           defer></script>
 
 <!-- ── Service Worker (PWA offline) ── -->
-<script src="registrar-sw.js"></script>
+<script src="registrar-sw.js"     defer></script>
 
 </body>
 </html>
