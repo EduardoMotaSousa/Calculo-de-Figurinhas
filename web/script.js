@@ -564,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (erro) { alert(erro); return; }
 
         const r = calcular(jatem, repetidas, preco);
-        animar(elFig, fmt(r.figurinhas));
+        animar(elFig, fmtI(Math.round(r.figurinhas)));
         animar(elPac, fmtI(r.pacotes));
         animar(elVal, fmtR(r.valor));
 
